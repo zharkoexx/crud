@@ -1,0 +1,82 @@
+import sqlite3
+import time    
+time.strftime('%Y-%m-%d %H:%M:%S')
+#libraries
+new_con = sqlite3.connect("tutorial.db")
+
+new_cur = new_con.cursor()
+new_cur.execute("CREATE TABLE IF NOT EXISTS beauty_salon(service TEXT, date TEXT, time TEXT, master TEXT)")
+#creating a database
+if __name__ == '__main__':
+    while True:
+        print('Сhoose what you need')
+        print('1. Enter "'"1"'" for insert data')
+        print('2. Enter "'"2"'" for read data')
+        print('3. Enter "'"3"'" for update data')
+        print('4. Enter "'"4"'" for delete data')
+        print('5. Enter "'"5"'" for stop program')
+#first of all, we need to choose the function we need
+        func = input("I need to ")
+
+        if func == '1':
+            print('ok, creating new data, one sec')
+            service = str(input("enter name of service: 1. hair-sutting\n, 2. colouring and styling\n, 3. nail treatments\n, 4. pedicure\n, 5. massages\n, 6. waxe\n"))
+            date = str(input('Enter date: '))
+            time = str(input('Enter time: '))
+            master = str(input('Enter name of master: '))
+            new_cur.execute("INSERT INTO beauty_salon VALUES(?, ?, ?, ?)", (service, date, time, master))
+            new_con.commit()
+#function to create a new row with datas
+        elif func == '2':
+            print('ok, one sec')
+            new_cur.execute("SELECT * FROM beauty_salon")
+            print(new_cur.fetchall())
+#function to read
+        elif func == '3':
+            print('ok, updating data')
+#firstly, we need to choose a type of data to change, because we do not need to change it everytime:))
+            edit_type = str(input("Enter type of data you want to update: "))
+            if edit_type == '':
+                new_service = str(input("Enter new service: "))
+                old_service = str(input("Enter old service: "))
+                new_cur.execute("UPDATE beauty_salon SET service = ? WHERE service = ?", (new_service, old_service))
+                new_con.commit()
+#data types
+            elif edit_type == 'date':
+                new_date = str(input("Enter new date: "))
+                old_date = str(input("Enter old date: "))
+                new_cur.execute("UPDATE beauty_salon SET date = ? WHERE date = ?", (new_date, old_date))
+                new_con.commit()
+
+            elif edit_type == 'time':
+                new_time = str(input("Enter new time: "))
+                old_time = str(input("Enter old time: "))
+                new_cur.execute("UPDATE beuty_salon SET time = ? WHERE time = ?", (new_time, old_time))
+                new_con.commit()
+
+            elif edit_type == 'master':
+                new_master = str(input("Enter new master: "))
+                old_master = str(input("Enter old master: "))
+                new_cur.execute("UPDATE beauty_salon SET master = ? WHERE master = ?", (new_master, old_master))
+                new_con.commit()
+#creating an else
+            else:
+                print('wrong input, please rewrite')
+                #function to update 
+                
+        elif func == '4':
+            #function to delete
+            print('ok, deleting data')
+            service = str(input("Enter service that you want to delete: "))
+            new_cur.execute("DELETE FROM beauty_salon WHERE service = ?", (service,))
+            new_con.commit()
+#stopping function, last one
+        elif func == '5':
+            print('ok, stopping program, bye')
+            break
+
+        else:
+            print('error in input, please rewrite')
+
+    new_con.close()
+    #close
